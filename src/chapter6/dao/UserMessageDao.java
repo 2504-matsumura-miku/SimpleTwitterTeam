@@ -9,12 +9,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.UserMessage;
 import chapter6.exception.SQLRuntimeException;
 
 public class UserMessageDao {
 
-	public List<UserMessage> select(Connection connection, Integer userId, String start, String end, int num) {
+	public List<UserMessage> select(Connection connection, Integer userId, String start, String end, String searchWord, String likeSearch, int num) {
 
         PreparedStatement ps = null;
         try {
@@ -30,18 +32,30 @@ public class UserMessageDao {
             sql.append("INNER JOIN users ");
             sql.append("ON messages.user_id = users.id ");
             sql.append("WHERE messages.created_date BETWEEN ? AND ? ");
+
             if(userId != null) {
             	sql.append("AND user_id = ? ");
             }
-            sql.append("ORDER BY created_date DESC limit " + num);
-            ps = connection.prepareStatement(sql.toString());
+            if (!StringUtils.isBlank(searchWord)) {
+    			sql.append(" AND messages.text like ? ");
+    		}
 
+            sql.append("ORDER BY created_date DESC limit " + num);
+
+            ps = connection.prepareStatement(sql.toString());
             ps.setString(1, start);
             ps.setString(2, end);
 
             if(userId != null) {
             	ps.setInt(3, userId);
-            }
+            	if (!StringUtils.isBlank(searchWord)) {
+    				ps.setString(4, searchWord + "%");
+    			}
+            } else {
+    			if (!StringUtils.isBlank(searchWord)) {
+    				ps.setString(3, searchWord + "%");
+    			}
+    		}
 
             ResultSet rs = ps.executeQuery();
 
