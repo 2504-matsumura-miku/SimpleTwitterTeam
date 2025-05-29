@@ -29,10 +29,13 @@ public class TopServlet extends HttpServlet {
             isShowMessageForm = true;
         }
 
-		String userId = request.getParameter("user_id");
-		String start = request.getParameter("start");
+      //検索機能を追加
+        String searchWord = request.getParameter("word");
+        String radiobutton = request.getParameter("radiobutton");
+        String userId = request.getParameter("user_id");
+        String start = request.getParameter("start");
         String end = request.getParameter("end");
-        List<UserMessage> messages = new MessageService().select(userId, start, end);
+        List<UserMessage> messages = new MessageService().select(userId, start, end, searchWord, radiobutton);
 
         //返信コメントを表示する
         List<UserComment> comments = new CommentService().select();
@@ -42,6 +45,8 @@ public class TopServlet extends HttpServlet {
         request.setAttribute("messages", messages);
         request.setAttribute("comments", comments);
         request.setAttribute("isShowMessageForm", isShowMessageForm);
+        //検索機能を追加
+        request.setAttribute("searchWord", request.getParameter("word"));
         request.getRequestDispatcher("/top.jsp").forward(request, response);
     }
 }
