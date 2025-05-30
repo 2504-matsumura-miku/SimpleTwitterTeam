@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.User;
 import chapter6.beans.UserComment;
 import chapter6.beans.UserMessage;
@@ -33,14 +35,23 @@ public class TopServlet extends HttpServlet {
         String searchWord = request.getParameter("word");
         String radiobutton = request.getParameter("radiobutton");
         String userId = request.getParameter("user_id");
+        request.setAttribute("startFrom", true);
         String start = request.getParameter("start");
         String end = request.getParameter("end");
         List<UserMessage> messages = new MessageService().select(userId, start, end, searchWord, radiobutton);
+        request.setAttribute("likeSearch", 1);
+
+    	if (!StringUtils.isBlank(radiobutton) && radiobutton.equals("contain")) {
+    		request.setAttribute("likeSearch", 2);
+    	} else {
+    		if (!StringUtils.isBlank(radiobutton) && radiobutton.equals("same")) {
+    			request.setAttribute("likeSearch", 3);
+    		}
+    	}
 
         //返信コメントを表示する
         List<UserComment> comments = new CommentService().select();
 
-        request.setAttribute("searchWord", request.getParameter("word"));
         request.setAttribute("start", start);
         request.setAttribute("end", end);
         request.setAttribute("messages", messages);
