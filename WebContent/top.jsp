@@ -60,6 +60,9 @@
 
 				<input type="radio" name="radiobutton" value="startFrom" checked="checked">
 				から始まる
+
+				<input type="radio" name="radiobutton" value="same" checked="checked">
+				完全⼀致
 				<input type= "submit" value = "検索">
 			</form>
 		</div>

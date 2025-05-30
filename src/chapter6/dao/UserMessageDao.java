@@ -37,6 +37,7 @@ public class UserMessageDao {
 
 			if (!StringUtils.isBlank(searchWord)) {
 				sql.append(" AND messages.text like ? ");
+				sql.append(" AND messages.text = ? ");
 			}
 
 			sql.append("ORDER BY created_date DESC limit " + num);
@@ -53,6 +54,10 @@ public class UserMessageDao {
 				if (!StringUtils.isBlank(searchWord)) {
     				ps.setString(4, searchWord + "%");
     			}
+				if (!StringUtils.isBlank(searchWord)) {
+					ps.setString(5, searchWord);
+				}
+
 			} else {
 				if (!StringUtils.isBlank(searchWord)) {
 					ps.setString(3, "%" + searchWord + "%");
@@ -60,6 +65,10 @@ public class UserMessageDao {
 				if (!StringUtils.isBlank(searchWord)) {
     				ps.setString(3, searchWord + "%");
     			}
+				if (!StringUtils.isBlank(searchWord)) {
+					ps.setString(4, searchWord);
+				}
+
 			}
 
 
