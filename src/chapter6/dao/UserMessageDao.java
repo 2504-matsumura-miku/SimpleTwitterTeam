@@ -50,11 +50,18 @@ public class UserMessageDao {
 				if (!StringUtils.isBlank(searchWord)) {
 					ps.setString(4, "%" + searchWord + "%");
 				}
+				if (!StringUtils.isBlank(searchWord)) {
+    				ps.setString(4, searchWord + "%");
+    			}
 			} else {
 				if (!StringUtils.isBlank(searchWord)) {
 					ps.setString(3, "%" + searchWord + "%");
 				}
+				if (!StringUtils.isBlank(searchWord)) {
+    				ps.setString(3, searchWord + "%");
+    			}
 			}
+
 
             ResultSet rs = ps.executeQuery();
 
